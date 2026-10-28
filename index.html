@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARQ Protocol Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<h1>ARQ Protocol Simulator</h1>
+<p>One-Bit Sliding Window, Go-Back-N and Selective Repeat on a lossy link. Computer Networks, Assignment I.</p>
+</header>
+<div class="wrap">
+<aside class="card">
+<h2>Simulation settings</h2>
+<div class="seg" id="proto">
+<label><input type="radio" name="p" value="sw" checked><span>One-Bit Sliding Window<small>Window of 1, sequence bits 0 and 1</small></span></label>
+<label><input type="radio" name="p" value="gbn"><span>Go-Back-N<small>Resend from the lost frame onward</small></span></label>
+<label><input type="radio" name="p" value="sr"><span>Selective Repeat<small>Resend only the lost frame</small></span></label>
+</div>
+<div class="grid2">
+<div class="f"><label for="N">Window size</label><input id="N" type="number" value="4" min="1" max="16"></div>
+<div class="f"><label for="total">Frames</label><input id="total" type="number" value="12" min="1" max="60"></div>
+<div class="f"><label for="tx">Transmission delay (ms)</label><input id="tx" type="number" value="100" min="10" max="2000"></div>
+<div class="f"><label for="ack">ACK delay (ms)</label><input id="ack" type="number" value="50" min="10" max="2000"></div>
+<div class="f"><label for="pl">Packet loss (%)</label><input id="pl" type="number" value="10" min="0" max="90"></div>
+<div class="f"><label for="al">ACK loss (%)</label><input id="al" type="number" value="5" min="0" max="90"></div>
+<div class="f"><label for="to">Timeout (ms)</label><input id="to" type="number" value="300" min="50" max="10000"></div>
+<div class="f"><label for="seed">Random seed</label><input id="seed" type="number" value="7"></div>
+</div>
+<div class="hint" id="hint"></div>
+<div class="btns">
+<button class="p" id="start">Start simulation</button>
+<button id="cmp">Compare all three</button>
+<button id="rnd">New random seed</button>
+</div>
+<p class="hint">Losses are decided per frame and attempt from the seed, so all three protocols face the same bad luck and the comparison stays fair. The sender emits one frame every 20 ms.</p>
+</aside>
+
+<section class="main">
+<div class="card">
+<h2>Sender window</h2>
+<div class="row"><b>Sender</b><div class="chips" id="sch"></div></div>
+<div class="row"><b>Receiver</b><div class="chips" id="rch"></div></div>
+<div class="leg"><span><i style="background:#2563eb"></i>Sent</span><span><i style="background:#d97706"></i>Retransmitted</span><span><i style="background:#059669"></i>Acknowledged</span><span><i style="background:#12203a"></i>Current window outline</span></div>
+</div>
+
+<div class="card">
+<h2>Time sequence diagram</h2>
+<div class="bar">
+<button id="pause" disabled>Pause</button>
+<button id="skip" disabled>Skip to end</button>
+<button id="reset" disabled>Reset</button>
+<label class="f" style="display:flex;gap:6px;align-items:center"><span>Speed</span><input id="speed" type="range" min=".25" max="3" step=".25" value="1" style="width:110px"></label>
+<span class="pill" id="clock">0 ms</span>
+</div>
+<div class="tl" id="tl"><canvas id="cv"></canvas></div>
+<div class="leg"><span><i style="background:#2563eb"></i>Frame</span><span><i style="background:#d97706"></i>Retransmitted frame</span><span><i style="background:#059669"></i>ACK</span><span><i style="background:#dc2626"></i>Lost (X)</span></div>
+</div>
+
+<div class="two">
+<div class="card"><h2>Event log</h2><div id="log"></div></div>
+<div class="card"><h2>Results</h2><div id="res"><div class="empty">Run a simulation to see the statistics for the chosen protocol.</div></div></div>
+</div>
+
+<div class="card" id="cmpCard" hidden>
+<h2>Protocol comparison</h2>
+<div style="overflow:auto"><table id="ctab"></table></div>
+<div class="bars" id="bars"></div>
+<pre id="ctxt"></pre>
+</div>
+</section>
+</div>
+
+<script src="simulation.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
